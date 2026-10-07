@@ -1,0 +1,170 @@
+// Demo data for I'FEEW THAIMASSAGE POS System
+export const therapists = [
+  { id: 'T01', name: 'คุณน้ำ', nickname: 'น้ำฝน', role: 'senior' },
+  { id: 'T02', name: 'คุณแป้ง', nickname: 'แป้ง', role: 'senior' },
+  { id: 'T03', name: 'คุณเบลล์', nickname: 'เบลล์', role: 'junior' },
+  { id: 'T04', name: 'คุณมิ้น', nickname: 'มิ้น', role: 'junior' },
+  { id: 'T05', name: 'คุณฝน', nickname: 'ฝน', role: 'senior' },
+];
+
+export const serviceTypes = [
+  { id: 'S01', category: 'นวดไทย', name: 'นวดไทย 60 นาที', price: 350, flatRate: 0.40, tierCategory: 'massage' },
+  { id: 'S02', category: 'นวดไทย', name: 'นวดไทย 90 นาที', price: 500, flatRate: 0.40, tierCategory: 'massage' },
+  { id: 'S03', category: 'นวดน้ำมัน', name: 'นวดน้ำมันอโรมา 60 นาที', price: 600, flatRate: 0.35, tierCategory: 'oil' },
+  { id: 'S04', category: 'นวดน้ำมัน', name: 'นวดน้ำมันอโรมา 90 นาที', price: 850, flatRate: 0.35, tierCategory: 'oil' },
+  { id: 'S05', category: 'นวดเท้า', name: 'นวดเท้า 45 นาที', price: 300, flatRate: 0.40, tierCategory: 'foot' },
+  { id: 'S06', category: 'อโรมา/สปา', name: 'สปาอโรมา 90 นาที', price: 1200, flatRate: 0.30, tierCategory: 'spa' },
+  { id: 'S07', category: 'ขัดผิว', name: 'ขัดผิวตัว + อาบน้ำ 60 นาที', price: 800, flatRate: 0.35, tierCategory: 'scrub' },
+  { id: 'S08', category: 'แพ็กเกจ/คอร์ส', name: 'คอร์ส 10 ครั้ง นวดไทย', price: 3000, flatRate: 0.30, tierCategory: 'package' },
+  { id: 'S09', category: 'ขายสินค้า', name: 'น้ำมันนวดสมุนไพร 200ml', price: 450, flatRate: 0.10, tierCategory: 'product' },
+  { id: 'S10', category: 'รายได้อื่น ๆ', name: 'ค่าบริการเสริม', price: 200, flatRate: 0.25, tierCategory: 'other' },
+  { id: 'S11', category: 'ทิป (Tip)', name: 'ทิปจากลูกค้า', price: 0, flatRate: 1.00, tierCategory: 'tip' },
+];
+
+export const categories = [
+  'นวดไทย', 'นวดน้ำมัน', 'นวดเท้า', 'อโรมา/สปา', 'ขัดผิว', 'แพ็กเกจ/คอร์ส', 'ขายสินค้า', 'รายได้อื่น ๆ', 'ทิป (Tip)'
+];
+
+export const tierRates = [
+  { min: 0, max: 30000, rate: 0.30 },
+  { min: 30001, max: 50000, rate: 0.35 },
+  { min: 50001, max: 80000, rate: 0.40 },
+  { min: 80001, max: Infinity, rate: 0.45 },
+];
+
+export function generateBillId() {
+  const now = new Date();
+  const ymd = now.toISOString().slice(0, 10).replace(/-/g, '');
+  const count = Math.floor(Math.random() * 900 + 1).toString().padStart(3, '0');
+  return `INV-${ymd}-${count}`;
+}
+
+function buildSeed() {
+  return {
+      therapists,
+      services: serviceTypes,
+      bills: [
+        {
+          id: 'INV-20261007-001',
+          date: '2026-10-07T14:30:00',
+          customer: 'คุณสมชาย',
+          memberNo: 'M-1042',
+          items: [
+            { serviceId: 'S01', therapistId: 'T01', qty: 1, price: 350, discount: 0, net: 350 },
+            { serviceId: 'S11', therapistId: 'T01', qty: 1, price: 150, discount: 0, net: 150 },
+          ],
+          paymentMethod: 'เงินสด',
+          status: 'paid',
+          createdAt: '2026-10-07T14:30:00',
+        },
+        {
+          id: 'INV-20261007-002',
+          date: '2026-10-07T16:00:00',
+          customer: 'คุณวิภา',
+          memberNo: '',
+          items: [
+            { serviceId: 'S03', therapistId: 'T03', qty: 1, price: 600, discount: 50, net: 550 },
+          ],
+          paymentMethod: 'QR Code / โอนเงิน',
+          status: 'paid',
+          createdAt: '2026-10-07T16:00:00',
+        },
+      ],
+      cashDrawer: {
+        startCash: 3000,
+        salesCash: 800,
+        otherCashIn: 200,
+        payoutCash: 500,
+        depositCash: 1000,
+        lastCountDate: '2026-10-07',
+        lastCountReal: 2700,
+        lastCountReason: 'ยอดขาดจากทิปไม่ครบ',
+      },
+      expenses: [
+        {
+          id: 'E001', date: '2026-10-07', category: 'Fixed Costs',
+          item: 'ค่าเช่าร้าน', amount: 15000, method: 'เงินสด',
+          approvedBy: 'คุณสมศรี', receiptUrl: '', notes: 'ค่าเช่าเดือน ตค.',
+        },
+        {
+          id: 'E002', date: '2026-10-07', category: 'Operating Expenses',
+          item: 'น้ำมันนวด', amount: 850, method: 'QR',
+          approvedBy: 'คุณสมศรี', receiptUrl: '', notes: 'ซื้อจากร้านสมุนไพร',
+        },
+        {
+          id: 'E003', date: '2026-10-07', category: 'Marketing',
+          item: 'Facebook Ads', amount: 1200, method: 'บัตรเครดิต',
+          approvedBy: 'คุณสมศรี', receiptUrl: '', notes: 'โปรโมทรายสัปดาห์',
+        },
+      ],
+      auditLog: [
+        { id: 'A001', timestamp: '2026-10-07T14:35:00', user: 'คุณน้ำ', action: 'สร้างบิล', detail: 'INV-20261007-001', oldValue: '-', newValue: 'paid', approvedBy: '-' },
+        { id: 'A002', timestamp: '2026-10-07T16:05:00', user: 'คุณแป้ง', action: 'สร้างบิล', detail: 'INV-20261007-002', oldValue: '-', newValue: 'paid', approvedBy: '-' },
+      ],
+      eodStatus: { lastClosed: '2026-10-07', locked: false, approvedBy: 'คุณสมศรี' },
+      commissionSettings: {
+        mode: 'flat',
+        flatRates: { massage: 0.40, oil: 0.35, foot: 0.40, spa: 0.30, scrub: 0.35, package: 0.30, product: 0.10, other: 0.25, tip: 1.00 },
+      },
+    };
+}
+
+const STORAGE_KEY = 'ifeew_data';
+let memoryFallback = null;
+
+function storageGet() {
+  try {
+    if (typeof localStorage === 'undefined') return null;
+    return localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return memoryFallback ? JSON.stringify(memoryFallback) : null;
+  }
+}
+
+function storageSet(obj) {
+  memoryFallback = obj;
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+    }
+  } catch {
+    /* sandboxed iframe — keep in-memory only */
+  }
+}
+
+export function seedLocalStorage() {
+  try {
+    if (!storageGet()) {
+      storageSet(buildSeed());
+    }
+  } catch {
+    memoryFallback = buildSeed();
+  }
+}
+
+export function loadData() {
+  seedLocalStorage();
+  try {
+    const raw = storageGet();
+    if (!raw) return buildSeed();
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return buildSeed();
+    // ensure required collections exist (merge with seed defaults)
+    const seed = buildSeed();
+    return {
+      ...seed,
+      ...parsed,
+      therapists: parsed.therapists || seed.therapists,
+      services: parsed.services || seed.services,
+      bills: parsed.bills || [],
+      expenses: parsed.expenses || [],
+      auditLog: parsed.auditLog || [],
+    };
+  } catch {
+    return buildSeed();
+  }
+}
+
+export function persistData(obj) {
+  storageSet(obj);
+}
